@@ -1,7 +1,7 @@
 # Healthcare Operations Analytics
 ## Understanding Hospital Performance Through Patient Experience Data
 
-> A SQL-based analysis of 4,000+ U.S. hospitals using CMS HCAHPS data, identifying nurse communication as the strongest operational predictor of patient satisfaction.
+> A SQL-based analysis of 4,000+ U.S. hospitals using CMS HCAHPS data, identifying nurse communication as the strongest operational correlate of patient satisfaction
 
 ---
 
