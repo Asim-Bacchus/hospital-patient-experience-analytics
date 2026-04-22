@@ -157,7 +157,7 @@ For hospital systems, this implies that process design, staffing models, and str
 ---
 
 ## Project Structure
-hospital-patient-experience-analytics/
+**hospital-patient-experience-analytics/
 ├── README.md
 ├── data/
 │   ├── raw/                        # Original CMS HCAHPS CSV
@@ -180,7 +180,7 @@ hospital-patient-experience-analytics/
 ├── reports/
 │   └── insights_report.md
 └── requirements.txt
----
+**---
 
 ## Tools and Skills Demonstrated
 
