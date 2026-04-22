@@ -115,6 +115,7 @@ Among states with 20 or more facilities, low overall performance consistently al
 - New Jersey (avg overall: 2.75 | avg nurse comm: 2.73)
 - New York (avg overall: 2.81 | avg nurse comm: 2.84)
 - Florida (avg overall: 2.94 | avg nurse comm: 2.70)
+  
 This pattern suggests that frontline interpersonal care quality is a meaningful differentiator in statewide performance variation, more so than physical facility conditions.
  
 ---
