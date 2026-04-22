@@ -110,15 +110,13 @@ On a 1–5 scale, this represents a substantial effect size with meaningful oper
 ---
 
 ### 3️⃣ State-Level Performance Patterns
-
-Among states with ≥20 facilities, low overall performance consistently aligns with low nurse communication scores. The same states appear in both bottom-10 lists:
+Among states with 20 or more facilities, low overall performance consistently aligns with low nurse communication scores. The same states appear in both bottom-10 lists:
 
 - New Jersey (avg overall: 2.75 | avg nurse comm: 2.73)
 - New York (avg overall: 2.81 | avg nurse comm: 2.84)
 - Florida (avg overall: 2.94 | avg nurse comm: 2.70)
 
-This pattern suggests that frontline interpersonal care quality is a meaningful differentiator in statewide performance variation — not physical facility conditions.
-
+This pattern suggests that frontline interpersonal care quality is a meaningful differentiator in statewide performance variation, more so than physical facility conditions.
 ---
 
 ## Operational Implications
