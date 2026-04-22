@@ -157,7 +157,8 @@ For hospital systems, this implies that process design, staffing models, and str
 ---
 
 ## Project Structure
-**hospital-patient-experience-analytics/
+```
+hospital-patient-experience-analytics/
 ├── README.md
 ├── data/
 │   ├── raw/                        # Original CMS HCAHPS CSV
@@ -180,8 +181,9 @@ For hospital systems, this implies that process design, staffing models, and str
 ├── reports/
 │   └── insights_report.md
 └── requirements.txt
-**---
+```
 
+---
 ## Tools and Skills Demonstrated
 
 - SQL querying, filtering, and aggregation (DuckDB)
@@ -201,7 +203,7 @@ This project is the second in a two-part healthcare operations analytics portfol
 
 | Project | Focus |
 |---------|-------|
-| Preventable Punchlisting Analysis | Root-cause analysis of operational failure in IT deployment workflows |
+| Preventable Punchlisting Analysis | Root-cause analysis of operational failure in healtcare IT deployment workflows |
 | Hospital Patient Experience Analytics *(this project)* | Performance monitoring and structured insight generation from national healthcare data |
 
 Together they demonstrate a full analyst cycle:
@@ -213,4 +215,4 @@ Together they demonstrate a full analyst cycle:
 ## Author
 
 Asim Bacchus
-[LinkedIn](#https://www.linkedin.com/in/asimbacchus/) | [GitHub](#https://github.com/Asim-Bacchus)
+[LinkedIn](https://www.linkedin.com/in/asimbacchus/) | [GitHub](https://github.com/Asim-Bacchus)
