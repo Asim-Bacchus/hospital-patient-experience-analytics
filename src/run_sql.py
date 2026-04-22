@@ -103,6 +103,47 @@ def run_sql_files():
             ROUND(CORR(recommend_stars, overall_rating_stars), 3) AS recommend_vs_overall
         FROM hospital_kpis_2024
     """).df().to_string(index=False))
+    print("\n📊 Nurse Sub-Dimension Correlations with Overall Rating:")
+    print(con.execute("""
+        SELECT
+            ROUND(CORR(pct_always_respect, overall_star_rating), 3) AS r_respect_vs_overall,
+            ROUND(CORR(pct_always_listen,  overall_star_rating), 3) AS r_listen_vs_overall,
+            ROUND(CORR(pct_always_explain, overall_star_rating), 3) AS r_explain_vs_overall
+        FROM nurse_comm_breakdown
+    """).df().to_string(index=False))
+
+    print("\n📊 National Averages by Sub-Dimension:")
+    print(con.execute("""
+        SELECT
+            ROUND(AVG(pct_always_respect), 1) AS national_avg_respect,
+            ROUND(AVG(pct_always_listen),  1) AS national_avg_listen,
+            ROUND(AVG(pct_always_explain), 1) AS national_avg_explain
+        FROM nurse_comm_breakdown
+    """).df().to_string(index=False))
+
+    print("\n📉 Bottom 10 States by Sub-Dimension (Respect):")
+    print(con.execute("""
+        SELECT state, ROUND(AVG(pct_always_respect), 2) AS avg_respect
+        FROM nurse_comm_breakdown
+        GROUP BY state HAVING COUNT(*) >= 20
+        ORDER BY avg_respect ASC LIMIT 10
+    """).df().to_string(index=False))
+
+    print("\n📉 Bottom 10 States by Sub-Dimension (Listening):")
+    print(con.execute("""
+        SELECT state, ROUND(AVG(pct_always_listen), 2) AS avg_listen
+        FROM nurse_comm_breakdown
+        GROUP BY state HAVING COUNT(*) >= 20
+        ORDER BY avg_listen ASC LIMIT 10
+    """).df().to_string(index=False))
+
+    print("\n📉 Bottom 10 States by Sub-Dimension (Explanation):")
+    print(con.execute("""
+        SELECT state, ROUND(AVG(pct_always_explain), 2) AS avg_explain
+        FROM nurse_comm_breakdown
+        GROUP BY state HAVING COUNT(*) >= 20
+        ORDER BY avg_explain ASC LIMIT 10
+    """).df().to_string(index=False))
     con.close()
 
 
