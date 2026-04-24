@@ -15,7 +15,7 @@ This project analyzes national CMS HCAHPS (Hospital Consumer Assessment of Healt
 
 Using publicly available CMS data (445,000+ rows across 22,000+ facilities), I structured, filtered, and transformed hospital-level survey data into standardized performance indicators suitable for operational analysis.
 
-The analysis finds that nurse communication is the strongest operational predictor of overall hospital satisfaction (r = 0.79), with a one-star increase associated with a 0.68-star increase in overall rating. State-level underperformance consistently aligns with weaker communication metrics, suggesting frontline interpersonal care is a primary driver of patient experience variation.
+The analysis finds that nurse communication is the strongest operational predictor of overall hospital satisfaction (r = 0.79), with a one-star increase associated with a 0.68-star increase in overall rating. A deeper sub-dimension analysis reveals that patients consistently rate nurses higher on courtesy and respect (85.7% "always") than on listening carefully (75.9%) or explaining things clearly (74.1%), suggesting the communication gap is not attitudinal but informational. State-level underperformance consistently aligns with weaker communication metrics, pointing to frontline interpersonal care as the primary driver of patient experience variation.
 
 ---
 
@@ -40,13 +40,13 @@ If patient experience reflects operational health, what patterns emerge when we 
 **Dataset:** HCAHPS Patient Survey — Hospital (2024 Reporting Year)  
 **Size:** 445,563 rows | 22,279 facilities
 
-The raw dataset is structured in long format and includes multiple reporting types (percentages, linear mean scores, and star ratings). To ensure comparability and clarity, this analysis focuses exclusively on standardized star-rating measures.
+The raw dataset is structured in long format and includes multiple reporting types (percentages, linear mean scores, and star ratings). This analysis works across both layers: star ratings for facility-level KPI comparison, and raw percent scores for sub-dimension analysis where continuous measures preserve more signal.
 
 ---
 
 ## KPI Definition
 
-The following CMS-defined star ratings were used:
+The following CMS-defined star ratings were used for the primary analysis:
 
 | KPI | Description |
 |-----|-------------|
@@ -59,13 +59,21 @@ The following CMS-defined star ratings were used:
 
 Each KPI is reported on a 1–5 star scale.
 
+The sub-dimension analysis uses raw percent scores from three individual HCAHPS survey questions that compose the nurse communication composite:
+
+| Measure ID | Survey Question |
+|------------|----------------|
+| `H_NURSE_RESPECT_A_P` | How often did nurses treat you with courtesy and respect? |
+| `H_NURSE_LISTEN_A_P` | How often did nurses listen carefully to you? |
+| `H_NURSE_EXPLAIN_A_P` | How often did nurses explain things in a way you could understand? |
+
 ---
 
 ## Methodology
 
 ### 1. Data Filtering & Cleaning (SQL + DuckDB)
 - Queried raw CSV directly using DuckDB without manual import
-- Filtered to star-rating measures only
+- Filtered to star-rating measures only for primary KPI analysis
 - Limited analysis to 2024 reporting period
 - Removed null and "Not Available" entries
 - Standardized facility identifiers
@@ -75,11 +83,17 @@ Each KPI is reported on a 1–5 star scale.
 - Produced one row per facility with structured performance metrics
 - Exported processed dataset to `data/processed/`
 
-### 3. Analysis
+### 3. Primary Analysis
 - Computed state-level KPI averages and rankings
 - Calculated Pearson correlations between each KPI and overall rating
 - Applied simple linear regression to estimate effect size of nurse communication
 - Identified bottom-performing states by both overall rating and nurse communication
+
+### 4. Sub-Dimension Analysis
+- Extracted raw "always" percent scores for the three nurse communication survey items
+- Pivoted into a facility-level table and correlated each sub-dimension against overall rating
+- Computed national averages per sub-dimension to identify where the communication gap is largest
+- Ran state-level breakdowns per sub-dimension to test whether underperforming states are weak across all three behaviors or concentrated in specific ones
 
 ---
 
@@ -97,6 +111,8 @@ Each KPI is reported on a 1–5 star scale.
 
 While "recommend hospital" is outcome-adjacent, **nurse communication is the strongest operational predictor of overall rating** — outperforming doctor communication, staff responsiveness, and cleanliness.
 
+![Correlations with Overall Rating](dashboard/figures/01_correlations_with_overall.png)
+
 ---
 
 ### 2️⃣ Estimated Operational Impact
@@ -110,21 +126,47 @@ On a 1–5 scale, this represents a substantial effect size with meaningful oper
 ---
 
 ### 3️⃣ State-Level Performance Patterns
+
 Among states with 20 or more facilities, low overall performance consistently aligns with low nurse communication scores. The same states appear in both bottom-10 lists:
 
 - New Jersey (avg overall: 2.75 | avg nurse comm: 2.73)
 - New York (avg overall: 2.81 | avg nurse comm: 2.84)
 - Florida (avg overall: 2.94 | avg nurse comm: 2.70)
-  
+
 This pattern suggests that frontline interpersonal care quality is a meaningful differentiator in statewide performance variation, more so than physical facility conditions.
- 
+
+![Bottom States by Overall Rating](dashboard/figures/02_bottom_states_overall.png)
+![Bottom States by Nurse Communication](dashboard/figures/03_bottom_states_nurse_comm.png)
+
+---
+
+### 4️⃣ Nurse Communication Sub-Dimension Breakdown
+
+Decomposing the nurse communication composite into its three component survey questions reveals where the gap actually lives.
+
+![Nurse Communication Sub-Dimension Breakdown](dashboard/figures/05_nurse_comm_breakdown.png)
+
+| Sub-Dimension | Correlation with Overall Rating | National "Always" Rate |
+|---------------|--------------------------------|----------------------|
+| Nurses listened carefully | **0.847** | 75.9% |
+| Nurses treated with respect | 0.843 | 85.7% |
+| Nurses explained clearly | 0.834 | 74.1% |
+
+The national averages surface a meaningful operational gap: patients report nurses treat them with courtesy at a much higher rate (85.7%) than they listen carefully (75.9%) or explain things clearly (74.1%). An 11-point spread between respect and explanation suggests the communication problem is not attitudinal but informational. Nurses are largely perceived as kind; they are less consistently perceived as attentive and clear.
+
+All three sub-dimensions show nearly equal correlation strength with overall satisfaction, meaning nurse communication quality is holistic. Targeted interventions on a single behavior are unlikely to move the needle as much as broader communication practice improvements.
+
+State-level breakdowns confirm that underperforming states (NJ, NY, FL, MD, CA) appear consistently across all three sub-dimension bottom-10 lists, reinforcing that these are systemic patterns rather than isolated weaknesses.
+
 ---
 
 ## Operational Implications
 
-If patient experience is treated as an operational performance metric rather than a marketing outcome, this analysis suggests that investments in frontline communication quality — particularly nursing staff interaction — may yield greater impact on satisfaction scores than environment-focused improvements alone.
+If patient experience is treated as an operational performance metric rather than a marketing outcome, this analysis points to frontline communication quality as the highest-leverage area for improvement, with nurse interactions as the primary driver.
 
-For hospital systems, this implies that process design, staffing models, and communication training may be high-leverage intervention points. States and facilities that underperform on communication metrics show consistent alignment with lower overall ratings, making nurse communication a practical leading indicator worth monitoring.
+The sub-dimension findings add specificity to that recommendation. The gap between how often nurses are courteous (85.7%) versus how often they listen carefully (75.9%) or explain things clearly (74.1%) suggests that communication training focused on active listening, plain-language explanation of medications and discharge instructions, and structured interaction frameworks may yield more impact than environment-focused or attitude-focused interventions alone.
+
+For hospital systems, this implies that process design, staffing models, and structured communication frameworks (such as AIDET or teach-back methodology) are high-leverage intervention points. States and facilities that underperform on communication metrics show consistent alignment with lower overall ratings across all three nurse communication behaviors, making this composite a practical leading indicator worth monitoring at both the facility and state level.
 
 ---
 
@@ -144,11 +186,18 @@ hospital-patient-experience-analytics/
 │   ├── 02_explore_star_ratings.sql
 │   ├── 03_build_hospital_kpis.sql
 │   ├── 04_export_processed.sql
-│   └── 05_analysis.sql
+│   ├── 05_analysis.sql
+│   └── 06_nurse_comm_breakdown.sql
 ├── src/
-│   └── run_sql.py                  # Pipeline runner
+│   ├── make_figures.py
+│   └── run_sql.py
 ├── dashboard/
-│   └── figures/                    # Visualizations
+│   └── figures/
+│       ├── 01_correlations_with_overall.png
+│       ├── 02_bottom_states_overall.png
+│       ├── 03_bottom_states_nurse_comm.png
+│       ├── 04_scatter_nurse_vs_overall.png
+│       └── 05_nurse_comm_breakdown.png
 ├── reports/
 │   └── insights_report.md
 └── requirements.txt
@@ -161,8 +210,9 @@ hospital-patient-experience-analytics/
 - SQL querying, filtering, and aggregation (DuckDB)
 - Long-to-wide data transformation (PIVOT)
 - KPI design aligned with business objectives
-- Correlation and regression analysis
-- Healthcare quality metric interpretation
+- Pearson correlation and simple linear regression
+- Sub-dimension decomposition of composite survey measures
+- Healthcare quality metric interpretation (HCAHPS, CMS)
 - Analytical storytelling and performance reporting
 - Reproducible data pipeline design
 
@@ -186,4 +236,4 @@ Together they demonstrate a full analyst cycle:
 ## Author
 
 Asim Bacchus  
-[LinkedIn](#) | [GitHub](#)
+[LinkedIn](https://www.linkedin.com/in/asimbacchus/) | [GitHub](https://github.com/Asim-Bacchus)
